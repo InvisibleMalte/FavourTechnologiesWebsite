@@ -13,20 +13,22 @@
 <body>
     <div class="navbar">
         <div class="navbar-links-left">
+            <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-right-link-a" href="./">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-right-link-a" href="./verkaufen">Verkaufen</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-right-link-a" href="./kaufen">Kaufen</a></ul>
         </div>
         <div class="navbar-logo">
-            <img class="navbar-logo-image" src="" height="" width=""></img>
+            <img class="navbar-logo-image" src="./assets/images/favicon-32x32.png" alt="Logo">
         </div>
-        <div class="links-right">
+        <div class="navbar-links-right">
             <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./reparieren">Reparieren</a></ul>
             <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./ueber-uns">Über uns</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./kontakt">Kontakt</a></ul>
         </div>
     </div>
     <div class="header">
         <h1 class="header-title">Favour Technologies</h1>
-        <p class="header-info">Wir sind Favour Technologies, ein Unternehmen, dass sich persönlich um deine alten, als auch deine neuen Geräte kümmert! </P>
+        <p class="header-info">Wir sind Favour Technologies, ein Unternehmen, das sich persönlich um deine alten als auch deine neuen Geräte kümmert!</p>
     </div>
     <br><br>
     <div class="services">
