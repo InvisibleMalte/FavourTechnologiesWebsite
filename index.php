@@ -5,13 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/styles/basic.css">
     <link rel="stylesheet" href="./assets/styles/index.css">
+    <link rel="icon" href="/assets/images/favicon-32x32.png">
+    
     <title>Favour Technologies &bull; Startseite</title>
 
 </head>
 <body>
+    <div class="navbar">
+        <div class="navbar-links-left">
+            <ul class="navbar-links-left-link"><a class="navbar-links-right-link-a" href="./verkaufen">Verkaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-right-link-a" href="./kaufen">Kaufen</a></ul>
+        </div>
+        <div class="navbar-logo">
+            <img class="navbar-logo-image" src="" height="" width=""></img>
+        </div>
+        <div class="links-right">
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./reparieren">Reparieren</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./ueber-uns">Über uns</a></ul>
+        </div>
+    </div>
     <div class="header">
-        <h1 class="name">Favour Technologies</h1>
-        <p class="">Hi, wir sind Favour Technologies. Ein Unternehmen, dass sich persönlich um deine alten, als auch deine neuen Geräte kümmert! </P>
+        <h1 class="header-title">Favour Technologies</h1>
+        <p class="header-info">Wir sind Favour Technologies, ein Unternehmen, dass sich persönlich um deine alten, als auch deine neuen Geräte kümmert! </P>
     </div>
     <br><br>
     <div class="services">
@@ -30,9 +45,15 @@
                 <p class="services-content-card-link">Hier kannst du mehr zu dem Kauf neuer Geräte erfahren.</p>
             </div>
             <div class="services-content-card">
-
+                <p class="services-content-card-title">Reparierung deiner Geräte</p>
+                <p class="services-content-card-content">Wir Reparieren deine defekten Geräten zu unschlagbar günstigen Angeboten innerhalb von 2 Werktagen.</p>
+                <p class="services-content-card-link">Hier kannst du mehr zu der Reparierung deiner Geräte erfahren.</p>
             </div>
         </div>
+    </div>
+    <div class="footer">
+        <p class="footer-madeby">Made by Favour Technologies with ❤️ in 2026</p>
+        <p class="footer-disclaimer">Fiktive Daten und Website für ein Schulprojekt.</p>
     </div>
 </body>
 </html>
