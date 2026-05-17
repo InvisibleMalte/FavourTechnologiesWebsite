@@ -6,6 +6,9 @@
     <title>Favour Technologies &bull; Startseite</title>
 </head>
 <body>
+    <h1 class="name">Favour Technologies</h1>
+    <p class="">Hi, wir sind Favour Technologies. Ein Unternehmen, dass sich persönlich um deine alten, als auch deine neuen Geräte kümmert! </P>
+    <br><br>
     
 </body>
 </html>
