@@ -1,0 +1,18 @@
+DirectoryIndex index.php index.html
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    RewriteRule ^index.php$ - [L]
+    RewriteRule ^verkaufen$ sites/verkaufen.php [L]
+    RewriteRule ^kaufen$ sites/kaufen.php [L]
+    RewriteRule ^reparieren$ sites/reparieren.php [L]
+    RewriteRule ^abos$ sites/abos.php [L]
+    RewriteRule ^vergleich$ sites/vergleich.php [L]
+    RewriteRule ^ueber-uns$ sites/ueber-uns.php [L]
+    RewriteRule ^kontakt$ sites/kontakt.php [L]
+    RewriteRule ^nutzerkonto$ sites/nutzerkonto.php [L]
+    RewriteRule ^login$ sites/login.php [L]
+    RewriteRule ^mitarbeiter$ sites/mitarbeiter.php [L]
+</IfModule>
