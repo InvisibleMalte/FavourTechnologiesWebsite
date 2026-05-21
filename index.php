@@ -4,6 +4,7 @@
     // Vergleich noch im Dev  
     // Mitarbeiterlink im Nutzerkonto wenn Mitarbeiter true ist in der DB
     // Mobile Navbar bug fixxen
+    // Hero komplett zu Header umbauen und überall usen
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +22,9 @@
 <body>
     <div class="navbar">
         <div class="navbar-links-left">
-            <button id="theme-toggle" aria-label="Toggle Theme"></button>
+            <button id="theme-toggle" aria-label="Toggle Theme">
+                <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
+            </button>
             <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-left-link-a" href="./">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./verkaufen">Verkaufen</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./kaufen">Kaufen</a></ul>
@@ -91,15 +94,21 @@
     </div>
 
     <script>
-        const themeToggle = document.getElementById("theme-toggle");
-        const sunIcon = '☀️';
-        const moonIcon = '🌙';
+        const themeToggle = document.getElementById("theme-toggle"); // Desktop toggle
+        const iconSun = themeToggle.querySelector('.icon-sun');
+        const iconMoon = themeToggle.querySelector('.icon-moon');
 
         function updateIcon() {
             if (document.body.classList.contains("dark-mode")) {
-                themeToggle.innerHTML = sunIcon;
+                iconSun.style.opacity = '1';
+                iconSun.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                iconMoon.style.opacity = '0';
+                iconMoon.style.transform = 'translate(-50%, -50%) rotate(90deg)';
             } else {
-                themeToggle.innerHTML = moonIcon;
+                iconSun.style.opacity = '0';
+                iconSun.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
+                iconMoon.style.opacity = '1';
+                iconMoon.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             }
         }
 
@@ -111,7 +120,6 @@
 
         themeToggle.addEventListener("click", function() {
             document.body.classList.toggle("dark-mode");
-            
             let theme = "light";
             if (document.body.classList.contains("dark-mode")) {
                 theme = "dark";

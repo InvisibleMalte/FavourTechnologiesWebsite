@@ -4,6 +4,31 @@
     padding: 0 20px;
 }
 
+/* Lampen-Projektions-Effekt (Lichtkegel) */
+.navbar-logo::after {
+content: '';
+    position: absolute;
+    top: 40px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2450px;
+    height: 500px; /* Ausreichend bis zum Titel-Bereich */
+    background: linear-gradient(to bottom, 
+        rgba(0, 123, 255, 0.5) 0%, 
+        rgba(0, 123, 255, 0.2) 50%, 
+        transparent 100%);
+    clip-path: polygon(49.8% 0%, 50.2% 0%, 100% 100%, 0% 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: 10; /* Über den Hero-Content, aber unter Interaktionen durch pointer-events: none */
+}
+
+/* Aktivierung des Lichtkegels im Dark Mode */
+body.dark-mode .navbar-logo::after {
+    opacity: 1; /* Im Dark Mode sichtbar */
+}
+
 /* Hero Bereich */
 .hero {
     padding: 100px 0;
@@ -12,6 +37,8 @@
 }
 
 .hero-title {
+    position: relative;
+    z-index: 11; /* Höher als der Lichtkegel (10) */
     font-size: 3.5rem;
     font-weight: 700;
     color: var(--text-color);
@@ -36,6 +63,11 @@
     border-radius: 980px; /* Abgerundete Pill-Form */
     font-weight: 500;
     transition: var(--transition);
+}
+
+body.dark-mode .cta-button {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.6), 0 0 40px rgba(0, 123, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cta-button:hover {
@@ -71,6 +103,13 @@
     flex-direction: column;
     flex: 1 1 300px;
     max-width: 500px;
+}
+
+body.dark-mode .service-card:hover {
+    box-shadow: 0 0 35px rgba(0, 123, 255, 0.4);
+    background-color: #242426;
+    border: none !important;
+    outline: none !important;
 }
 
 .service-card:hover {

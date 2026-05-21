@@ -120,7 +120,16 @@ body {
     opacity: 0.8;
 }
 
+.navbar-logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .navbar-logo-image {
+    position: relative;
+    z-index: 11;
     height: 40px; /* Passe die Höhe deines Logos hier an */
     width: auto;
     display: block;
@@ -135,6 +144,7 @@ body {
 }
 
 #theme-toggle {
+    position: relative; /* Needed for absolute positioning of icons */
     background: none;
     border: none;
     color: var(--text-color);
@@ -149,11 +159,59 @@ body {
     width: 40px;
     height: 40px;
     margin-right: auto; /* Schiebt den Switch nach ganz links im linken Container */
+    overflow: hidden; /* Hide parts of rotating icons */
 }
 
 #theme-toggle:hover {
     background-color: var(--primary-color);
     color: white;
+}
+
+#theme-toggle .icon-sun,
+#theme-toggle .icon-moon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg); /* Center and initial rotation */
+    font-size: 1.2rem; /* Match button font-size */
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Initial state for icons (light mode default) */
+body:not(.dark-mode) #theme-toggle .icon-moon {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Dark mode state */
+body.dark-mode #theme-toggle .icon-sun {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Hidden state for icons with rotation */
+body:not(.dark-mode) #theme-toggle .icon-sun {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+body.dark-mode #theme-toggle .icon-moon {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* Logo Glow in Dark Mode */
+.navbar-logo-image {
+    height: 40px; /* Passe die Höhe deines Logos hier an */
+    width: auto;
+    display: block;
+    transition: transform 0.6s ease-in-out, filter 0.5s ease; /* Add filter to transition */
+}
+
+body.dark-mode .navbar-logo-image {
+    filter: drop-shadow(0 0 15px var(--primary-color)) 
+            drop-shadow(0 0 30px var(--primary-color)) 
+            brightness(1.1);
+    /* Animation entfernt für ruhigeres Bild */
 }
 
 /* Footer Bereich */
