@@ -7,7 +7,7 @@
 /* Hero Bereich */
 .hero {
     padding: 100px 0;
-    text-align: left;
+    text-align: center;
     background-color: var(--bg-color);
 }
 
@@ -23,7 +23,7 @@
     font-size: 1.25rem;
     color: var(--text-muted);
     max-width: 600px;
-    margin: 0 0 40px;
+    margin: 0 auto 40px;
     line-height: 1.5;
 }
 
@@ -50,13 +50,14 @@
 }
 
 .services-header {
-    text-align: left;
+    text-align: center;
     margin-bottom: 60px;
 }
 
 .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Zentriert Karten in der 2. Reihe */
     gap: 30px;
 }
 
@@ -68,6 +69,8 @@
     transition: var(--transition);
     display: flex;
     flex-direction: column;
+    flex: 1 1 300px;
+    max-width: 500px;
 }
 
 .service-card:hover {
@@ -84,6 +87,7 @@
 
 /* Footer Bereich */
 .footer {
+    margin-top: auto; /* Schiebt den Footer nach unten */
     background-color: var(--footer-bg);
     color: var(--text-color);
     padding: 60px 0;
@@ -101,4 +105,31 @@
 .footer-disclaimer {
     font-size: 0.9rem;
     color: var(--text-muted);
+}
+
+/* Info Banner */
+.info-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    max-width: 500px;
+    background: var(--card-bg);
+    border: 1px solid var(--navbar-border);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    font-size: 0.85rem;
+}
+
+.close-banner {
+    cursor: pointer;
+    font-weight: bold;
+    padding-left: 15px;
+    color: var(--primary-color);
+    font-family: sans-serif; /* X sieht in Sans oft besser aus */
 }
