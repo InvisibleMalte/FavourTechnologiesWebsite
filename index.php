@@ -4,6 +4,8 @@
         // Mitarbeiter: dummy-mitarbeiter@favour-technologies.de / Dummy123!
         // Kunde: dummy@favour-technologies.de / Dummy123
     // Handyansichten aller Nutzerbezogenen Seiten (Nutzerkonto, Mitarbeiter, Verwaltung) sowie alle Unterseiten davon überprüfen und optimieren 
+    // Angaben bei Anträgen überlappen immer noch
+    // Tickets zurücksetzen und neue erstellen mit den Jungs
     // mal sehen, vielleicht ja noch mehr ._.
 ?>
 
