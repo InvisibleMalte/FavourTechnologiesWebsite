@@ -17,6 +17,15 @@ try {
 
     // Tabellen erstellen
     $query = "
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            rank TEXT DEFAULT 'Kunde',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE TABLE IF NOT EXISTS sell_requests (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             device_name TEXT NOT NULL,
@@ -62,8 +71,16 @@ try {
             message TEXT NOT NULL,
             status TEXT DEFAULT 'offen',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE TABLE IF NOT EXISTS contact_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            request_id INTEGER NOT NULL,
+            sender_email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            is_employee INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (request_id) REFERENCES contact_requests(id) ON DELETE CASCADE
         );";
-
     $conn->exec($query);
 
 } catch (Exception $e) {

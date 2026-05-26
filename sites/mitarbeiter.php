@@ -1,59 +1,38 @@
 <?php
 session_start();
+require_once '../database/db.php';
+
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_rank'] != 'Mitarbeiter' && $_SESSION['user_rank'] != 'Admin')) {
+    header("Location: login");
+    exit();
+}
+
+$user_email = $_SESSION['user_email'];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['close_request'])) {
+    $req_id = $_POST['request_id'];
+    $type = $_POST['request_type'];
+    $table = $type . "_requests";
+    $conn->exec("UPDATE $table SET status = 'geschlossen' WHERE id = $req_id");
+}
+
+$sells = $conn->query("SELECT *, 'sell' as type FROM sell_requests WHERE status = 'offen'");
+$repairs = $conn->query("SELECT *, 'repair' as type FROM repair_requests WHERE status = 'offen'");
+$contacts = $conn->query("SELECT *, 'contact' as type FROM contact_requests WHERE status = 'offen'");
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/styles/basics.css">
     <link rel="stylesheet" href="../assets/styles/verkaufen.css">
-    <link rel="icon" href="../assets/images/logo.png">
-    <title>Kaufen &bull; Favour Technologies</title>
+    <title>Mitarbeiter &bull; Favour Technologies</title>
     <style>
-        .construction-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 100px 20px;
-            min-height: 50vh;
-        } /* Fehlende schließende Klammer hinzugefügt */
-
-        .construction-title {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-        .construction-text {
-            color: var(--text-muted);
-            max-width: 600px;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        /* Neuer Button Style */
-        .cta-button.secondary-button {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--navbar-border);
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-block;
-        }
-        .cta-button.secondary-button:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-        body.dark-mode .cta-button.secondary-button:hover {
-            box-shadow: 0 0 35px rgba(0, 123, 255, 0.4);
-        }
+        .request-card { background: var(--card-bg); border: 1px solid var(--navbar-border); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .tag { padding: 4px 8px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .tag-sell { background: #e3f2fd; color: #1976d2; }
+        .tag-repair { background: #f3e5f5; color: #7b1fa2; }
+        .tag-contact { background: #e8f5e9; color: #2e7d32; }
     </style>
 </head>
 <body>
@@ -70,7 +49,7 @@ session_start();
         <div class="navbar-links-left desktop-only">
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
-            <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="reparieren">Reparatur</a></ul>
         </div>
         <div class="navbar-logo">
@@ -88,15 +67,11 @@ session_start();
                     <span class="arrow-down"></span>
                 </span>
                 <div class="dropdown-content">
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <a href="nutzerkonto">Übersicht</a>
-                        <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
-                        <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
-                        <a href="nutzerkonto?tab=settings">Einstellungen</a>
-                        <a href="logout" style="color: #dc3545;">Abmelden</a>
-                    <?php else: ?>
-                        <a href="login">Anmelden</a>
-                    <?php endif; ?>
+                    <a href="nutzerkonto">Übersicht</a>
+                    <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
+                    <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
+                    <a href="nutzerkonto?tab=settings">Einstellungen</a>
+                    <a href="logout" style="color: #dc3545;">Abmelden</a>
                 </div>
             </li>
         </div>
@@ -107,7 +82,6 @@ session_start();
             </a>
         </div>
 
-        <!-- Mobile Side Menu -->
         <nav class="mobile-nav" id="mobile-nav">
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
@@ -121,27 +95,27 @@ session_start();
         </nav>
     </div>
 
-    <main class="content-wrapper">
-        <div class="container">
-            <section class="construction-wrapper">
-                <h1 class="construction-title">Shop im Aufbau</h1>
-                <p class="construction-text">
-                    Wir arbeiten mit Hochdruck an unserem Online-Shop, um dir die beste Auswahl an neuer und refurbished Technik anbieten zu können. 
-                    Schau bald wieder vorbei!
-                </p>
-                <div style="margin-top: 30px;">
-                    <a href="../" class="cta-button secondary-button">Zurück zur Startseite</a>
+    <main class="container">
+        <h1 style="margin-top:40px;">Offene Anfragen</h1>
+        <?php 
+        $all = [];
+        while($r = $sells->fetchArray(SQLITE3_ASSOC)) $all[] = $r;
+        while($r = $repairs->fetchArray(SQLITE3_ASSOC)) $all[] = $r;
+        while($r = $contacts->fetchArray(SQLITE3_ASSOC)) $all[] = $r;
+        
+        foreach($all as $req): ?>
+            <div class="request-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <div><span class="tag tag-<?php echo $req['type']; ?>"><?php echo $req['type']; ?></span> <strong style="margin-left:10px;"><?php echo htmlspecialchars($req['device_name'] ?? $req['subject']); ?></strong></div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="antrag?id=<?php echo $req['id']; ?>&type=<?php echo $req['type']; ?>" class="cta-button" style="padding:8px 20px; font-size:0.85rem;">Öffnen</a>
+                        <form method="POST" style="margin:0;"><input type="hidden" name="request_id" value="<?php echo $req['id']; ?>"><input type="hidden" name="request_type" value="<?php echo $req['type']; ?>"><button type="submit" name="close_request" class="cta-button danger" style="padding:8px 20px; font-size:0.85rem;">Schließen</button></form>
+                    </div>
                 </div>
-            </section>
-        </div>
+                <p style="font-size:0.85rem; color:var(--text-muted);"><?php echo htmlspecialchars(substr($req['description'] ?? $req['message'], 0, 100)) . '...'; ?></p>
+            </div>
+        <?php endforeach; ?>
     </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <p class="footer-text">&copy; 2026 Favour Technologies. Alle Rechte vorbehalten.</p>
-            <p class="footer-disclaimer">Diese Website dient ausschließlich zu Demonstrationszwecken im Rahmen eines Schulprojekts. Alle Daten sind fiktiv.</p>
-        </div>
-    </footer>
 
     <script>
         const themeToggle = document.getElementById("theme-toggle");

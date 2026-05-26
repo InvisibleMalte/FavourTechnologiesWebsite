@@ -1,60 +1,72 @@
 <?php
 session_start();
+require_once '../database/db.php';
+
+if (!isset($_SESSION['user_id']) || $_SESSION['user_rank'] != 'Admin') {
+    header("Location: login");
+    exit();
+}
+
+if (!isset($_GET['id'])) {
+    header("Location: verwaltung");
+    exit();
+}
+
+$edit_id = $_GET['id'];
+$status_msg = "";
+$status_type = "";
+
+// Benutzerdaten laden
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
+$stmt->bindValue(':id', $edit_id, SQLITE3_INTEGER);
+$user_to_edit = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+
+if (!$user_to_edit) {
+    header("Location: verwaltung");
+    exit();
+}
+
+// Update Logik
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_user'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $rank = $_POST['rank'];
+    $password = $_POST['password'];
+
+    if (!empty($password)) {
+        $stmt = $conn->prepare("UPDATE users SET name = :name, email = :email, rank = :rank, password = :password WHERE id = :id");
+        $stmt->bindValue(':password', $password, SQLITE3_TEXT);
+    } else {
+        $stmt = $conn->prepare("UPDATE users SET name = :name, email = :email, rank = :rank WHERE id = :id");
+    }
+    
+    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+    $stmt->bindValue(':rank', $rank, SQLITE3_TEXT);
+    $stmt->bindValue(':id', $edit_id, SQLITE3_INTEGER);
+
+    try {
+        if ($stmt->execute()) {
+            $status_msg = "Benutzer erfolgreich aktualisiert!";
+            $status_type = "success";
+            // Daten neu laden
+            $user_to_edit['name'] = $name;
+            $user_to_edit['email'] = $email;
+            $user_to_edit['rank'] = $rank;
+        }
+    } catch (Exception $e) {
+        $status_msg = "Fehler: E-Mail wird eventuell bereits verwendet.";
+        $status_type = "error";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/styles/basics.css">
     <link rel="stylesheet" href="../assets/styles/verkaufen.css">
-    <link rel="icon" href="../assets/images/logo.png">
-    <title>Kaufen &bull; Favour Technologies</title>
-    <style>
-        .construction-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 100px 20px;
-            min-height: 50vh;
-        } /* Fehlende schließende Klammer hinzugefügt */
-
-        .construction-title {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-        .construction-text {
-            color: var(--text-muted);
-            max-width: 600px;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        /* Neuer Button Style */
-        .cta-button.secondary-button {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--navbar-border);
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-block;
-        }
-        .cta-button.secondary-button:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-        body.dark-mode .cta-button.secondary-button:hover {
-            box-shadow: 0 0 35px rgba(0, 123, 255, 0.4);
-        }
-    </style>
+    <title>Nutzer bearbeiten &bull; Favour Technologies</title>
 </head>
 <body>
     <div class="navbar">
@@ -70,7 +82,7 @@ session_start();
         <div class="navbar-links-left desktop-only">
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
-            <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="reparieren">Reparatur</a></ul>
         </div>
         <div class="navbar-logo">
@@ -88,15 +100,11 @@ session_start();
                     <span class="arrow-down"></span>
                 </span>
                 <div class="dropdown-content">
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <a href="nutzerkonto">Übersicht</a>
-                        <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
-                        <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
-                        <a href="nutzerkonto?tab=settings">Einstellungen</a>
-                        <a href="logout" style="color: #dc3545;">Abmelden</a>
-                    <?php else: ?>
-                        <a href="login">Anmelden</a>
-                    <?php endif; ?>
+                    <a href="nutzerkonto">Übersicht</a>
+                    <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
+                    <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
+                    <a href="nutzerkonto?tab=settings">Einstellungen</a>
+                    <a href="logout" style="color: #dc3545;">Abmelden</a>
                 </div>
             </li>
         </div>
@@ -107,7 +115,6 @@ session_start();
             </a>
         </div>
 
-        <!-- Mobile Side Menu -->
         <nav class="mobile-nav" id="mobile-nav">
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
@@ -121,27 +128,47 @@ session_start();
         </nav>
     </div>
 
-    <main class="content-wrapper">
-        <div class="container">
-            <section class="construction-wrapper">
-                <h1 class="construction-title">Shop im Aufbau</h1>
-                <p class="construction-text">
-                    Wir arbeiten mit Hochdruck an unserem Online-Shop, um dir die beste Auswahl an neuer und refurbished Technik anbieten zu können. 
-                    Schau bald wieder vorbei!
-                </p>
-                <div style="margin-top: 30px;">
-                    <a href="../" class="cta-button secondary-button">Zurück zur Startseite</a>
+    <main class="container">
+        <div style="margin-top: 40px; display: flex; align-items: center; gap: 20px;">
+            <a href="verwaltung" style="text-decoration: none; font-size: 1.5rem;">←</a>
+            <h1>Nutzer bearbeiten</h1>
+        </div>
+
+        <?php if($status_msg): ?>
+            <div class="alert alert-<?php echo $status_type; ?>" style="margin-top: 20px;">
+                <?php echo $status_msg; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="admin-card" style="max-width: 600px; margin-top: 30px; background: var(--card-bg); border: 1px solid var(--navbar-border); border-radius: 20px; padding: 30px;">
+            <form method="POST" class="sell-form" style="padding:0; border:none; background:none;">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" value="<?php echo htmlspecialchars($user_to_edit['name']); ?>" required>
                 </div>
-            </section>
+                <div class="form-group">
+                    <label>E-Mail</label>
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($user_to_edit['email']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Rang</label>
+                    <select name="rank">
+                        <option value="Kunde" <?php if($user_to_edit['rank'] == 'Kunde') echo 'selected'; ?>>Kunde</option>
+                        <option value="Mitarbeiter" <?php if($user_to_edit['rank'] == 'Mitarbeiter') echo 'selected'; ?>>Mitarbeiter</option>
+                        <option value="Admin" <?php if($user_to_edit['rank'] == 'Admin') echo 'selected'; ?>>Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Neues Passwort (leer lassen zum Beibehalten)</label>
+                    <input type="text" name="password" placeholder="Passwort ändern...">
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" name="update_user" class="cta-button" style="flex: 1;">Speichern</button>
+                    <a href="verwaltung" class="cta-button" style="flex: 1; text-align: center; text-decoration: none; background: transparent; border: 1px solid var(--navbar-border); color: var(--text-color);">Abbrechen</a>
+                </div>
+            </form>
         </div>
     </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <p class="footer-text">&copy; 2026 Favour Technologies. Alle Rechte vorbehalten.</p>
-            <p class="footer-disclaimer">Diese Website dient ausschließlich zu Demonstrationszwecken im Rahmen eines Schulprojekts. Alle Daten sind fiktiv.</p>
-        </div>
-    </footer>
 
     <script>
         const themeToggle = document.getElementById("theme-toggle");

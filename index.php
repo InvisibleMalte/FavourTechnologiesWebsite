@@ -1,45 +1,106 @@
 <?php 
-    // ABOS
-    // Dummy Konto als Benutzerkonto
-    // Vergleich noch im Dev  
-    // Mitarbeiterlink im Nutzerkonto wenn Mitarbeiter true ist in der DB
-    // Mobile Navbar bug fixxen
-    // Hero komplett zu Header umbauen und überall usen
+    session_start();
+    // Dummy Accounts beim Login ausschildern damit man sich einloggen kann:
+        // Mitarbeiter: dummy-mitarbeiter@favour-technologies.de / Dummy123!
+        // Kunde: dummy@favour-technologies.de / Dummy123
+    // Handyansichten aller Nutzerbezogenen Seiten (Nutzerkonto, Mitarbeiter, Verwaltung) sowie alle Unterseiten davon überprüfen und optimieren 
+    // mal sehen, vielleicht ja noch mehr ._.
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/styles/basics.css">
     <link rel="stylesheet" href="./assets/styles/index.css">
-    <link rel="icon" href="/assets/images/logo.png">
+    <link rel="icon" href="./assets/images/logo.png">
     
     <title>Favour Technologies &bull; Startseite</title>
 
 </head>
 <body>
     <div class="navbar">
-        <div class="navbar-links-left">
+        <div class="navbar-controls-mobile">
+            <button class="hamburger" id="hamburger" aria-label="Menü öffnen">
+                <span></span><span></span><span></span>
+            </button>
             <button id="theme-toggle" aria-label="Toggle Theme">
                 <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
             </button>
-            <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-left-link-a" href="./">Start</a></ul>
-            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./verkaufen">Verkaufen</a></ul>
-            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./kaufen">Kaufen</a></ul>
-            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./reparieren">Reparatur</a></ul>
+        </div>
+        
+        <div class="navbar-links-left desktop-only">
+            <ul class="navbar-links-left-link navbar-links-active"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="reparieren">Reparatur</a></ul>
         </div>
         <div class="navbar-logo">
-            <a href="./"><img class="navbar-logo-image" src="./assets/images/logo.png" alt="Logo"></a>
+            <a href="/"><img class="navbar-logo-image" src="assets/images/logo.png" alt="Logo"></a>
         </div>
-        <div class="navbar-links-right">
-            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./abos">Abos</a></ul>
-            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./vergleich">Vergleich</a></ul>
-            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./ueber-uns">Über uns</a></ul>
-            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./kontakt">Kontakt</a></ul>
-            <ul class="navbar-links-right-link right"><a class="navbar-links-right-link-a right" href="./nutzerkonto">Nutzerkonto</a></ul>
+        <div class="navbar-links-right desktop-only">
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="abos">Abos</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="vergleich">Vergleich</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="ueber-uns">Über uns</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="kontakt">Kontakt</a></ul>
+            
+            <?php if(isset($_SESSION['user_id'])): ?>
+            <li class="navbar-links-right-link dropdown right">
+                <span class="nav-name">
+                    <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+                    <span class="arrow-down"></span>
+                </span>
+                <div class="dropdown-content">
+                    <a href="nutzerkonto">Übersicht</a>
+                    <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
+                    <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
+                    <a href="nutzerkonto?tab=settings">Einstellungen</a>
+                    <a href="logout" style="color: #dc3545;">Abmelden</a>
+                </div>
+            </li>
+            <?php else: ?>
+            <ul class="navbar-links-right-link right"><a class="navbar-links-right-link-a right" href="login">Nutzerkonto</a></ul>
+            <?php endif; ?>
         </div>
+
+        <div class="navbar-user-mobile">
+            <?php if(isset($_SESSION['user_id'])): ?>
+            <div class="dropdown">
+                <div class="nav-name" style="padding: 0;">
+                    <svg class="mobile-user-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="dropdown-content">
+                    <a href="nutzerkonto">Übersicht</a>
+                    <?php if($_SESSION['user_rank'] == 'Mitarbeiter' || $_SESSION['user_rank'] == 'Admin'): ?><a href="mitarbeiter">Mitarbeiter</a><?php endif; ?>
+                    <?php if($_SESSION['user_rank'] == 'Admin'): ?><a href="verwaltung">Verwaltung</a><?php endif; ?>
+                    <a href="nutzerkonto?tab=settings">Einstellungen</a>
+                    <a href="logout" style="color: #dc3545;">Abmelden</a>
+                </div>
+            </div>
+            <?php else: ?>
+            <a href="login" aria-label="Nutzerkonto">
+                <svg class="mobile-user-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Mobile Side Menu -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="/">Start</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="verkaufen">Verkaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="kaufen">Kaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="reparieren">Reparatur</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="abos">Abos</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="vergleich">Vergleich</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="ueber-uns">Über uns</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="kontakt">Kontakt</a></ul>
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="nutzerkonto">Mein Konto</a></ul>
+            <?php else: ?>
+                <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="login">Anmelden</a></ul>
+            <?php endif; ?>
+        </nav>
     </div>
 
     <header class="hero">
@@ -95,8 +156,38 @@
 
     <script>
         const themeToggle = document.getElementById("theme-toggle"); // Desktop toggle
+        const hamburger = document.getElementById("hamburger");
+        const mobileNav = document.getElementById("mobile-nav");
         const iconSun = themeToggle.querySelector('.icon-sun');
         const iconMoon = themeToggle.querySelector('.icon-moon');
+
+        hamburger.addEventListener("click", () => {
+            mobileNav.classList.toggle("active");
+        });
+
+        // Close mobile nav when clicking outside
+        document.addEventListener("click", (event) => {
+            const isClickInsideMobileNav = mobileNav.contains(event.target);
+            const isClickOnHamburger = hamburger.contains(event.target);
+            const isMobileNavActive = mobileNav.classList.contains("active");
+
+            if (isMobileNavActive && !isClickInsideMobileNav && !isClickOnHamburger) {
+                mobileNav.classList.remove("active");
+            }
+        });
+
+        // Dropdown toggle for mobile
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.addEventListener('click', function(e) {
+                if (window.innerWidth <= 1100) {
+                    this.classList.toggle('active');
+                    e.stopPropagation();
+                }
+            });
+        });
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+        });
 
         function updateIcon() {
             if (document.body.classList.contains("dark-mode")) {

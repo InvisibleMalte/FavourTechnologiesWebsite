@@ -15,4 +15,8 @@ Options -Indexes
     RewriteRule ^nutzerkonto$ sites/nutzerkonto.php [L]
     RewriteRule ^login$ sites/login.php [L]
     RewriteRule ^mitarbeiter$ sites/mitarbeiter.php [L]
+    RewriteRule ^verwaltung$ sites/verwaltung.php [L]
+    RewriteRule ^antrag$ sites/request_details.php [L]
+    RewriteRule ^edit_user$ sites/edit_user.php [L]
+    RewriteRule ^logout$ sites/logout.php [L]
 </IfModule>

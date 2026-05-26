@@ -45,12 +45,18 @@
     <link rel="icon" href="../assets/images/logo.png">
     <title>Kontakt &bull; Favour Technologies</title>
 </head>
-<body>
+<body lang="de">
     <div class="navbar">
-        <div class="navbar-links-left">
+        <div class="navbar-controls-mobile">
+            <button class="hamburger" id="hamburger" aria-label="Menü öffnen">
+                <span></span><span></span><span></span>
+            </button>
             <button id="theme-toggle" aria-label="Toggle Theme">
                 <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
             </button>
+        </div>
+        
+        <div class="navbar-links-left desktop-only">
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="../">Start</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./verkaufen">Verkaufen</a></ul>
             <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./kaufen">Kaufen</a></ul>
@@ -59,17 +65,37 @@
         <div class="navbar-logo">
             <a href="../"><img class="navbar-logo-image" src="../assets/images/logo.png" alt="Logo"></a>
         </div>
-        <div class="navbar-links-right">
+        <div class="navbar-links-right desktop-only">
             <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./abos">Abos</a></ul>
             <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./vergleich">Vergleich</a></ul>
             <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./ueber-uns">Über uns</a></ul>
             <ul class="navbar-links-right-link navbar-links-active"><a class="navbar-links-right-link-a" href="./kontakt">Kontakt</a></ul>
             <ul class="navbar-links-right-link right"><a class="navbar-links-right-link-a right" href="./nutzerkonto">Nutzerkonto</a></ul>
         </div>
+
+        <div class="navbar-user-mobile">
+            <a href="./nutzerkonto" aria-label="Nutzerkonto">
+                <svg class="mobile-user-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </a>
+        </div>
+
+        <!-- Mobile Side Menu -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="../">Start</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./verkaufen">Verkaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./kaufen">Kaufen</a></ul>
+            <ul class="navbar-links-left-link"><a class="navbar-links-left-link-a" href="./reparieren">Reparatur</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./abos">Abos</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./vergleich">Vergleich</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./ueber-uns">Über uns</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./kontakt">Kontakt</a></ul>
+            <ul class="navbar-links-right-link"><a class="navbar-links-right-link-a" href="./nutzerkonto">Nutzerkonto</a></ul>
+        </nav>
     </div>
 
-    <main class="container">
-        <section class="contact-section">
+    <main class="content-wrapper">
+        <div class="container">
+            <section class="contact-section">
             <h1 class="page-title">Kontaktiere uns</h1>
             <p class="page-subtitle">Hast du Fragen zu unserem fiktiven Startup oder unserem Service? Schreib uns einfach!</p>
 
@@ -102,7 +128,8 @@
             <div class="info-text" style="margin-top: 30px;">
                 <p><strong>Wichtiger Hinweis:</strong> Den aktuellen Stand deiner Anfrage kannst du jederzeit in deinem Nutzerkonto einsehen. Ein Nutzerkonto ist für die Nutzung dieses Services derzeit verpflichtend.</p>
             </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer class="footer">
@@ -120,6 +147,24 @@
         themeToggle.addEventListener("click", function() {
             document.body.classList.toggle("dark-mode");
             localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+        });
+    </script>
+    <script>
+        const hamburger = document.getElementById("hamburger");
+        const mobileNav = document.getElementById("mobile-nav");
+
+        hamburger.addEventListener("click", () => {
+            mobileNav.classList.toggle("active");
+        });
+
+        document.addEventListener("click", (event) => {
+            const isClickInsideMobileNav = mobileNav.contains(event.target);
+            const isClickOnHamburger = hamburger.contains(event.target);
+            const isMobileNavActive = mobileNav.classList.contains("active");
+
+            if (isMobileNavActive && !isClickInsideMobileNav && !isClickOnHamburger) {
+                mobileNav.classList.remove("active");
+            }
         });
     </script>
 </body>
