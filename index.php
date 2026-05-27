@@ -6,6 +6,7 @@
     // Handyansichten aller Nutzerbezogenen Seiten (Nutzerkonto, Mitarbeiter, Verwaltung) sowie alle Unterseiten davon überprüfen und optimieren 
     // Angaben bei Anträgen überlappen immer noch
     // Tickets zurücksetzen und neue erstellen mit den Jungs
+    // Spendenseite bearbeiten so Like gofundme, mehr in der WA Gruppe
     // mal sehen, vielleicht ja noch mehr ._.
 ?>
 
